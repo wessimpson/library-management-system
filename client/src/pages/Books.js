@@ -1,15 +1,83 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, lazy, Suspense } from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
-import { FaSearch, FaFilter, FaTimes } from 'react-icons/fa';
+import { FaSearch, FaFilter, FaTimes, FaBook, FaCube } from 'react-icons/fa';
 import { getBooks, getGenres } from '../utils/api';
 import ModernBookCard from '../components/books/ModernBookCard';
 import FloatingCard from '../components/ui/FloatingCard';
 import { FadeInItem } from '../components/animations/PageTransition';
+// Lazy load the 3D bookshelf scene for better performance
+const BookshelfScene = lazy(() => import('../components/3d/BookshelfScene'));
 
 // Styled components
 const PageContainer = styled.div`
   position: relative;
+`;
+
+const ViewToggleContainer = styled.div`
+  position: fixed;
+  top: 6rem;
+  right: 2rem;
+  z-index: 100;
+  display: flex;
+  gap: 0.5rem;
+`;
+
+const ViewToggleButton = styled.button`
+  background: ${props => props.active ? '#1E5F74' : 'rgba(255, 255, 255, 0.7)'};
+  color: ${props => props.active ? 'white' : '#1E5F74'};
+  border: 2px solid #1E5F74;
+  border-radius: 50%;
+  width: 3rem;
+  height: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  }
+  
+  svg {
+    font-size: 1.2rem;
+  }
+`;
+
+const ThreeDContainer = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  z-index: 10;
+`;
+
+const LoadingSpinner = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100vh;
+  color: #1E5F74;
+  font-size: 1.5rem;
+  
+  &::after {
+    content: '';
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 6px solid rgba(30, 95, 116, 0.1);
+    border-top-color: #1E5F74;
+    animation: spinner 1s linear infinite;
+  }
+  
+  @keyframes spinner {
+    to { transform: rotate(360deg); }
+  }
 `;
 
 const PageHeader = styled(motion.div)`
@@ -290,6 +358,7 @@ const Books = () => {
   const [genres, setGenres] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [viewMode, setViewMode] = useState('grid'); // 'grid' or '3d'
   
   // Filter states
   const [searchQuery, setSearchQuery] = useState('');
@@ -385,145 +454,177 @@ const Books = () => {
 
   return (
     <PageContainer>
-      <PageHeader
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-      >
-        <Title>Discover Books</Title>
-        <Subtitle>Explore our vast collection and find your next literary adventure</Subtitle>
-      </PageHeader>
+      {/* View Toggle Buttons */}
+      <ViewToggleContainer>
+        <ViewToggleButton 
+          active={viewMode === 'grid'} 
+          onClick={() => setViewMode('grid')}
+          title="Grid View"
+        >
+          <FaBook />
+        </ViewToggleButton>
+        <ViewToggleButton 
+          active={viewMode === '3d'} 
+          onClick={() => setViewMode('3d')}
+          title="3D Bookshelf View"
+        >
+          <FaCube />
+        </ViewToggleButton>
+      </ViewToggleContainer>
       
-      <FadeInItem delay={0.2}>
-        <SearchContainer>
-          <form onSubmit={handleSearch}>
-            <InputContainer>
-              <SearchInput
-                type="text"
-                placeholder="Search books by title or author..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                whileFocus={{ scale: 1.01 }}
-                transition={{ duration: 0.2 }}
-              />
-              <SearchButton
-                type="submit"
-                disabled={loading}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <FaSearch /> {loading ? 'Searching...' : 'Search'}
-              </SearchButton>
-            </InputContainer>
-            
-            <FilterButtons>
-              <FilterButton
-                type="button"
-                isActive={showFilters}
-                onClick={() => setShowFilters(!showFilters)}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                {showFilters ? <FaTimes /> : <FaFilter />} {showFilters ? 'Hide Filters' : 'Show Filters'}
-              </FilterButton>
-              
-              <ResetButton
-                type="button"
-                onClick={resetFilters}
-                disabled={loading}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                Reset
-              </ResetButton>
-            </FilterButtons>
-            
-            {showFilters && (
-              <FilterContainer
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: 'auto' }}
-                exit={{ opacity: 0, height: 0 }}
-                transition={{ duration: 0.3 }}
-              >
-                <SelectContainer>
-                  <Label htmlFor="genre">Genre</Label>
-                  <Select
-                    id="genre"
-                    value={selectedGenre}
-                    onChange={(e) => setSelectedGenre(e.target.value)}
+      {/* 3D Bookshelf View */}
+      {viewMode === '3d' && (
+        <ThreeDContainer>
+          <Suspense fallback={<LoadingSpinner />}>
+            <BookshelfScene books={books} />
+          </Suspense>
+        </ThreeDContainer>
+      )}
+      
+      {/* Traditional Grid View */}
+      {viewMode === 'grid' && (
+        <>
+          <PageHeader
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            <Title>Discover Books</Title>
+            <Subtitle>Explore our vast collection and find your next literary adventure</Subtitle>
+          </PageHeader>
+          
+          <FadeInItem delay={0.2}>
+            <SearchContainer>
+              <form onSubmit={handleSearch}>
+                <InputContainer>
+                  <SearchInput
+                    type="text"
+                    placeholder="Search books by title or author..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    whileFocus={{ scale: 1.01 }}
+                    transition={{ duration: 0.2 }}
+                  />
+                  <SearchButton
+                    type="submit"
+                    disabled={loading}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
                   >
-                    <option value="">All Genres</option>
-                    {genres.map(genre => (
-                      <option key={genre.GenreID} value={genre.GenreID}>
-                        {genre.Name}
-                      </option>
-                    ))}
-                  </Select>
-                </SelectContainer>
+                    <FaSearch /> {loading ? 'Searching...' : 'Search'}
+                  </SearchButton>
+                </InputContainer>
                 
-                <CheckboxContainer>
-                  <CheckboxLabel>
-                    <Checkbox
-                      type="checkbox"
-                      id="availableOnly"
-                      checked={availableOnly}
-                      onChange={(e) => setAvailableOnly(e.target.checked)}
-                    />
-                    Show only available books
-                  </CheckboxLabel>
-                </CheckboxContainer>
-              </FilterContainer>
-            )}
-          </form>
-        </SearchContainer>
-      </FadeInItem>
-      
-      <FadeInItem delay={0.3}>
-        <ResultsCount
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.3, duration: 0.5 }}
-        >
-          {books.length} books found
-        </ResultsCount>
-      </FadeInItem>
-      
-      {loading ? (
-        <LoadingContainer
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5 }}
-        >
-          <LoadingSpinner />
-        </LoadingContainer>
-      ) : (
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-        >
-          {books.length > 0 ? (
-            <BooksGrid>
-              {books.map((book, index) => (
-                <motion.div
-                  key={book.BookID}
-                  variants={itemVariants}
-                  custom={index}
-                  transition={{ delay: 0.1 * index, duration: 0.5 }}
-                >
-                  <ModernBookCard book={book} />
-                </motion.div>
-              ))}
-            </BooksGrid>
+                <FilterButtons>
+                  <FilterButton
+                    type="button"
+                    isActive={showFilters}
+                    onClick={() => setShowFilters(!showFilters)}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    {showFilters ? <FaTimes /> : <FaFilter />} {showFilters ? 'Hide Filters' : 'Show Filters'}
+                  </FilterButton>
+                  
+                  <ResetButton
+                    type="button"
+                    onClick={resetFilters}
+                    disabled={loading}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    Reset
+                  </ResetButton>
+                </FilterButtons>
+                
+                {showFilters && (
+                  <FilterContainer
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    exit={{ opacity: 0, height: 0 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <SelectContainer>
+                      <Label htmlFor="genre">Genre</Label>
+                      <Select
+                        id="genre"
+                        value={selectedGenre}
+                        onChange={(e) => setSelectedGenre(e.target.value)}
+                      >
+                        <option value="">All Genres</option>
+                        {genres.map(genre => (
+                          <option key={genre.GenreID} value={genre.GenreID}>
+                            {genre.Name}
+                          </option>
+                        ))}
+                      </Select>
+                    </SelectContainer>
+                    
+                    <CheckboxContainer>
+                      <CheckboxLabel>
+                        <Checkbox
+                          type="checkbox"
+                          id="availableOnly"
+                          checked={availableOnly}
+                          onChange={(e) => setAvailableOnly(e.target.checked)}
+                        />
+                        Show only available books
+                      </CheckboxLabel>
+                    </CheckboxContainer>
+                  </FilterContainer>
+                )}
+              </form>
+            </SearchContainer>
+          </FadeInItem>
+          
+          <FadeInItem delay={0.3}>
+            <ResultsCount
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.3, duration: 0.5 }}
+            >
+              {books.length} books found
+            </ResultsCount>
+          </FadeInItem>
+          
+          {loading ? (
+            <LoadingContainer
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5 }}
+            >
+              <LoadingSpinner />
+            </LoadingContainer>
           ) : (
-            <NoResults>
-              <NoResultsTitle>No Books Found</NoResultsTitle>
-              <NoResultsText>
-                No books match your search criteria. Try adjusting your filters or search terms.
-              </NoResultsText>
-            </NoResults>
+            <motion.div
+              variants={containerVariants}
+              initial="hidden"
+              animate="visible"
+            >
+              {books.length > 0 ? (
+                <BooksGrid>
+                  {books.map((book, index) => (
+                    <motion.div
+                      key={book.BookID}
+                      variants={itemVariants}
+                      custom={index}
+                      transition={{ delay: 0.1 * index, duration: 0.5 }}
+                    >
+                      <ModernBookCard book={book} />
+                    </motion.div>
+                  ))}
+                </BooksGrid>
+              ) : (
+                <NoResults>
+                  <NoResultsTitle>No Books Found</NoResultsTitle>
+                  <NoResultsText>
+                    No books match your search criteria. Try adjusting your filters or search terms.
+                  </NoResultsText>
+                </NoResults>
+              )}
+            </motion.div>
           )}
-        </motion.div>
+        </>
       )}
     </PageContainer>
   );
