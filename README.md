@@ -183,26 +183,7 @@ library-management-system/
    - Ensure the server's /log endpoint is working
    - Check client-side logger implementation
 
-## 💖 Contributing
-
-We love contributions! Feel free to:
-
-1. 🍴 Fork the project
-2. 🔧 Create your feature branch
-3. ✨ Add your magic
-4. 🚀 Push to the branch
-5. 🎉 Open a Pull Request
 
 ## 📜 License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
-
-## 🙏 Acknowledgements
-
-- 🎨 Design inspired by modern digital experiences
-- 📚 Book lovers everywhere
-- ☕ Countless cups of coffee
-
----
-
-Made with ❤️ for readers and librarians
