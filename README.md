@@ -1,16 +1,9 @@
 # ✨ Modern Library Management System 📚
 
-> *Where books meet beautiful design!* A modern take on library management with sleek animations and an immersive reading experience.
-
 ![Library Management System](https://img.shields.io/badge/Status-Active-brightgreen)
 ![Version](https://img.shields.io/badge/Version-1.0.0-blue)
 ![License](https://img.shields.io/badge/License-MIT-yellow)
 
-## 🚀 Overview
-
-Welcome to our beautiful library management system! This isn't your grandmother's dusty card catalog—we've reimagined the library experience with abstract animations, smooth transitions, and an interface that makes browsing books a joy.
-
-Designed for both readers and librarians, this application helps manage book collections, member profiles, borrowing operations, and library events in a visually stunning environment.
 
 ## ✨ Features
 
@@ -42,16 +35,16 @@ Designed for both readers and librarians, this application helps manage book col
   - Member insights at a glance
   - Event scheduling with drag and drop
 
-## 🛠️ Tech Magic
+## 🛠️ Tech Stack
 
-### ✨ Frontend Wonders
+### ✨ Frontend
 - React.js for component magic
 - Styled Components for beautiful styling
 - Framer Motion for delightful animations
 - Three.js for 3D bookshelf visualization
 - React Bootstrap enhanced with custom aesthetics
 
-### 🧠 Backend Powers
+### 🧠 Backend
 - Node.js with Express for API elegance
 - MySQL database with optimized queries
 - JWT for secure authentication
@@ -97,9 +90,6 @@ For detailed instructions, see [QUICKSTART.md](QUICKSTART.md).
 - MySQL (v5.7 or higher)
 - Modern web browser (Chrome, Firefox, Safari, Edge)
 
-## 📸 Screenshots
-
-*Coming soon!*
 
 ## 🌟 Key Features
 
