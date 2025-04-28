@@ -72,7 +72,7 @@ source ./server/.env
 set +o allexport
 
 # Validate env variables
-if [[ -z "$DB_HOST" || -z "$DB_USER" || -z "$DB_PASSWORD" || -z "$DB_NAME" ]]; then
+if [[ -z "$DB_HOST" || -z "$DB_USER" || -z "$DB_NAME" ]]; then
   echo -e "${RED}Environment variables are not correctly set. Exiting.${NC}"
   exit 1
 fi

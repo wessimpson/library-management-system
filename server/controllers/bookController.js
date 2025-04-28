@@ -111,7 +111,7 @@ exports.getBook = async (req, res) => {
       success: true,
       data: {
         ...book[0],
-        averageRating: ratings[0].AverageRating || 0,
+        averageRating: Number(ratings[0].AverageRating ?? 0),
         numberOfReviews: ratings[0].NumberOfReviews || 0,
         relatedBooks
       }
