@@ -69,7 +69,7 @@ const NavItems = styled(motion.div)`
     justify-content: center;
     padding: 2rem;
     z-index: 1001;
-    transform: ${({ isOpen }) => isOpen ? 'translateX(0)' : 'translateX(100%)'};
+    transform: ${({ $isOpen }) => $isOpen ? 'translateX(0)' : 'translateX(100%)'};
     transition: transform 0.3s ease-in-out;
   }
 `;
@@ -219,7 +219,7 @@ const ModernNavbar = () => {
         {isOpen ? <FaTimes /> : <FaBars />}
       </MenuToggle>
       
-      <NavItems isOpen={isOpen}>
+      <NavItems $isOpen={isOpen}>
         <NavLink
           variants={linkVariants}
           whileHover="hover"
