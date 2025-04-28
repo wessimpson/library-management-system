@@ -94,7 +94,7 @@ eval $MYSQL_CMD -e "CREATE DATABASE IF NOT EXISTS \`$DB_NAME\` CHARACTER SET utf
 # Fall back to default connection method (for localhost socket)
 mysql --host="$DB_HOST" --user="$DB_USER" --password="$DB_PASSWORD" -e "CREATE DATABASE IF NOT EXISTS \`$DB_NAME\` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
 
-# Load schema
+# Load database schema
 if [ -f "./setup-database.sql" ]; then
   echo -e "${YELLOW}Loading database schema...${NC}"
   # Try with TCP protocol first
@@ -110,6 +110,25 @@ if [ -f "./setup-database.sql" ]; then
   fi
 else
   echo -e "${RED}setup-database.sql not found. Skipping schema load.${NC}"
+fi
+
+# Load sample data
+if [ -f "./sample-data.sql" ]; then
+  echo -e "${YELLOW}Loading sample data...${NC}"
+  # Try with TCP protocol first
+  eval $MYSQL_CMD "$DB_NAME" < ./sample-data.sql 2>/dev/null || \
+  # Fall back to default connection method
+  mysql --host="$DB_HOST" --user="$DB_USER" --password="$DB_PASSWORD" "$DB_NAME" < ./sample-data.sql
+  
+  if [ $? -eq 0 ]; then
+    echo -e "${GREEN}✓ Sample data loaded successfully${NC}"
+  else
+    echo -e "${RED}Failed to load sample data.${NC}"
+    # Don't exit here, as we can continue even without sample data
+    echo -e "${YELLOW}Continuing without sample data...${NC}"
+  fi
+else
+  echo -e "${YELLOW}sample-data.sql not found. Skipping sample data load.${NC}"
 fi
 
 # Final message

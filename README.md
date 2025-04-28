@@ -68,9 +68,15 @@ cd library-management-system
 # Make the quickstart script executable
 chmod +x quickstart.sh
 
-# Run the script (handles dependencies, database, and environment setup)
+# Run the script (handles dependencies, database setup, and environment configuration)
 ./quickstart.sh
 ```
+
+The script will:
+- Install dependencies for both client and server
+- Set up necessary environment variables
+- Create the database and load schema from `setup-database.sql`
+- Populate the database with sample data from `sample-data.sql`
 
 For detailed instructions, see [QUICKSTART.md](QUICKSTART.md).
 
@@ -141,7 +147,8 @@ library-management-system/
 │   ├── routes/           # API routes
 │   └── index.js          # Entry point
 ├── quickstart.sh         # Automated setup script
-├── setup-database.sql    # Database schema and sample data
+├── setup-database.sql    # Database schema
+├── sample-data.sql       # Sample data for testing
 ├── QUICKSTART.md         # Detailed setup instructions
 └── README.md             # Project documentation
 ```
@@ -153,6 +160,7 @@ library-management-system/
 1. **Database Connection Issues**
    - Verify your MySQL server is running
    - Check that the database connection details in `.env` are correct
+   - Use host `127.0.0.1` instead of `localhost` if you encounter connection issues
    - Ensure the `library_management` database exists
 
 2. **Server Won't Start**
@@ -169,6 +177,11 @@ library-management-system/
    - Clear your browser's localStorage
    - Ensure you're using the correct credentials
    - Check that your JWT_SECRET is set in the .env file
+   - Verify JWT_EXPIRE is properly set (default is 30d)
+   
+5. **Logging Issues**
+   - Ensure the server's /log endpoint is working
+   - Check client-side logger implementation
 
 ## 💖 Contributing
 
