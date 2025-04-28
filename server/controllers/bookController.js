@@ -1,6 +1,6 @@
 const { pool } = require('../config/db');
 
-// Get all books with optional filtering
+// Books listing with filters
 exports.getBooks = async (req, res) => {
   try {
     const { title, author, genre, branch, available } = req.query;
@@ -63,7 +63,7 @@ exports.getBooks = async (req, res) => {
   }
 };
 
-// Get a single book by ID
+// Fetch single book details
 exports.getBook = async (req, res) => {
   try {
     const [book] = await pool.query(

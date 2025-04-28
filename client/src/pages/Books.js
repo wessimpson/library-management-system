@@ -1,61 +1,17 @@
-import React, { useState, useEffect, lazy, Suspense } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
-import { FaSearch, FaFilter, FaTimes, FaBook, FaCube } from 'react-icons/fa';
+import { FaSearch, FaFilter, FaTimes } from 'react-icons/fa';
 import { getBooks, getGenres } from '../utils/api';
 import ModernBookCard from '../components/books/ModernBookCard';
 import FloatingCard from '../components/ui/FloatingCard';
 import { FadeInItem } from '../components/animations/PageTransition';
-// Lazy load the 3D bookshelf scene for better performance
-const BookshelfScene = lazy(() => import('../components/3d/BookshelfScene'));
 
 // Styled components
 const PageContainer = styled.div`
   position: relative;
 `;
 
-const ViewToggleContainer = styled.div`
-  position: fixed;
-  top: 6rem;
-  right: 2rem;
-  z-index: 100;
-  display: flex;
-  gap: 0.5rem;
-`;
-
-const ViewToggleButton = styled.button`
-  background: ${props => props.active ? '#1E5F74' : 'rgba(255, 255, 255, 0.7)'};
-  color: ${props => props.active ? 'white' : '#1E5F74'};
-  border: 2px solid #1E5F74;
-  border-radius: 50%;
-  width: 3rem;
-  height: 3rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  
-  &:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-  }
-  
-  svg {
-    font-size: 1.2rem;
-  }
-`;
-
-const ThreeDContainer = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100vh;
-  z-index: 10;
-  padding-top: 70px; /* Add padding to account for the navbar height */
-`;
 
 const LoadingSpinner = styled.div`
   display: flex;
@@ -359,7 +315,6 @@ const Books = () => {
   const [genres, setGenres] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [viewMode, setViewMode] = useState('grid'); // 'grid' or '3d'
   
   // Filter states
   const [searchQuery, setSearchQuery] = useState('');
@@ -455,37 +410,7 @@ const Books = () => {
 
   return (
     <PageContainer>
-      {/* View Toggle Buttons */}
-      <ViewToggleContainer>
-        <ViewToggleButton 
-          active={viewMode === 'grid'} 
-          onClick={() => setViewMode('grid')}
-          title="Grid View"
-        >
-          <FaBook />
-        </ViewToggleButton>
-        <ViewToggleButton 
-          active={viewMode === '3d'} 
-          onClick={() => setViewMode('3d')}
-          title="3D Bookshelf View"
-        >
-          <FaCube />
-        </ViewToggleButton>
-      </ViewToggleContainer>
-      
-      {/* 3D Bookshelf View */}
-      {viewMode === '3d' && (
-        <ThreeDContainer>
-          <Suspense fallback={<LoadingSpinner />}>
-            <BookshelfScene books={books} />
-          </Suspense>
-        </ThreeDContainer>
-      )}
-      
-      {/* Traditional Grid View */}
-      {viewMode === 'grid' && (
-        <>
-          <PageHeader
+        <PageHeader
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
@@ -625,8 +550,6 @@ const Books = () => {
               )}
             </motion.div>
           )}
-        </>
-      )}
     </PageContainer>
   );
 };
