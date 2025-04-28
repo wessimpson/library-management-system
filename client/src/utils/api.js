@@ -1,4 +1,5 @@
 import axios from 'axios';
+import logger from './logger';
 
 // Books
 export const getBooks = async (filters = {}) => {
@@ -272,7 +273,7 @@ export const createEvent = async (eventData) => {
     const res = await axios.post('/api/events', eventData);
     return res.data;
   } catch (error) {
-    console.error('Error creating event:', error);
+    logger.error('Error creating event:', error);
     throw error;
   }
 };

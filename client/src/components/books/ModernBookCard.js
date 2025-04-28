@@ -114,7 +114,7 @@ const AvailabilityBadge = styled(motion.div)`
   position: absolute;
   top: 1rem;
   left: 0;
-  background: ${props => props.available ? 'rgba(52, 199, 89, 0.9)' : 'rgba(247, 86, 124, 0.9)'};
+  background: ${props => props.isAvailable === 'true' ? 'rgba(52, 199, 89, 0.9)' : 'rgba(247, 86, 124, 0.9)'};
   color: white;
   font-size: 0.7rem;
   font-weight: 600;
@@ -123,7 +123,7 @@ const AvailabilityBadge = styled(motion.div)`
   border-bottom-right-radius: 30px;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  box-shadow: 0 4px 10px ${props => props.available ? 'rgba(52, 199, 89, 0.3)' : 'rgba(247, 86, 124, 0.3)'};
+  box-shadow: 0 4px 10px ${props => props.isAvailable === 'true' ? 'rgba(52, 199, 89, 0.3)' : 'rgba(247, 86, 124, 0.3)'};
   backdrop-filter: blur(5px);
   z-index: 10;
 `;
@@ -136,12 +136,12 @@ const AvailabilityInfo = styled(motion.div)`
   
   svg {
     margin-right: 0.5rem;
-    color: ${props => props.available ? '#34c759' : '#F7567C'};
+    color: ${props => props.isAvailable === 'true' ? '#34c759' : '#F7567C'};
   }
   
   span {
     font-weight: 500;
-    color: ${props => props.available ? '#34c759' : '#F7567C'};
+    color: ${props => props.isAvailable === 'true' ? '#34c759' : '#F7567C'};
   }
   
   small {
@@ -208,7 +208,7 @@ const ModernBookCard = ({ book }) => {
         >
           {book.AvailableCopies > 0 && (
             <AvailabilityBadge 
-              available={true}
+              isAvailable="true"
               initial={{ x: -100 }}
               animate={{ x: 0 }}
               transition={{ delay: 0.2, duration: 0.5 }}
@@ -219,7 +219,7 @@ const ModernBookCard = ({ book }) => {
           
           {book.AvailableCopies === 0 && (
             <AvailabilityBadge 
-              available={false}
+              isAvailable="false"
               initial={{ x: -100 }}
               animate={{ x: 0 }}
               transition={{ delay: 0.2, duration: 0.5 }}
@@ -248,7 +248,7 @@ const ModernBookCard = ({ book }) => {
               )}
             </BookMetadata>
             
-            <AvailabilityInfo available={book.AvailableCopies > 0}>
+            <AvailabilityInfo isAvailable={(book.AvailableCopies > 0).toString()}>
               <FaBookOpen />
               <span>
                 {book.AvailableCopies > 0 ? 'Available now' : 'Currently unavailable'}

@@ -54,6 +54,7 @@ const ThreeDContainer = styled.div`
   width: 100%;
   height: 100vh;
   z-index: 10;
+  padding-top: 70px; /* Add padding to account for the navbar height */
 `;
 
 const LoadingSpinner = styled.div`
@@ -315,7 +316,7 @@ const LoadingContainer = styled(motion.div)`
   height: 200px;
 `;
 
-const LoadingSpinner = styled(motion.div)`
+const GridLoadingSpinner = styled(motion.div)`
   width: 50px;
   height: 50px;
   border-radius: 50%;
@@ -593,7 +594,7 @@ const Books = () => {
               animate={{ opacity: 1 }}
               transition={{ duration: 0.5 }}
             >
-              <LoadingSpinner />
+              <GridLoadingSpinner />
             </LoadingContainer>
           ) : (
             <motion.div

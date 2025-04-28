@@ -1,5 +1,6 @@
 import React, { createContext, useState, useEffect } from 'react';
 import axios from 'axios';
+import logger from './logger';
 
 const AuthContext = createContext();
 
@@ -9,21 +10,30 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   // Set up axios defaults
-  axios.defaults.headers.common['Authorization'] = token ? `Bearer ${token}` : '';
+  if (token) {
+    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+  } else {
+    delete axios.defaults.headers.common['Authorization'];
+  }
 
   useEffect(() => {
     // Load user
     const loadUser = async () => {
       if (token) {
         try {
+          // Set token in axios headers
+          axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
           const res = await axios.get('/api/auth/me');
           setCurrentUser(res.data.data);
         } catch (error) {
-          console.error('Error loading user:', error);
+          logger.error('Error loading user', error);
           // If token is invalid or expired, clear it
           localStorage.removeItem('token');
           setToken(null);
+          delete axios.defaults.headers.common['Authorization'];
         }
+      } else {
+        delete axios.defaults.headers.common['Authorization'];
       }
       setLoading(false);
     };
@@ -47,7 +57,7 @@ export const AuthProvider = ({ children }) => {
       
       return { success: true };
     } catch (error) {
-      console.error('Login error:', error);
+      logger.error('Login error', error);
       return { 
         success: false, 
         message: error.response?.data?.message || 'Login failed'
@@ -71,7 +81,7 @@ export const AuthProvider = ({ children }) => {
       
       return { success: true };
     } catch (error) {
-      console.error('Register error:', error);
+      logger.error('Register error', error);
       return { 
         success: false, 
         message: error.response?.data?.message || 'Registration failed'
@@ -97,7 +107,7 @@ export const AuthProvider = ({ children }) => {
       setCurrentUser({ ...currentUser, ...res.data.data });
       return { success: true };
     } catch (error) {
-      console.error('Update profile error:', error);
+      logger.error('Update profile error', error);
       return { 
         success: false, 
         message: error.response?.data?.message || 'Failed to update profile'
@@ -111,7 +121,7 @@ export const AuthProvider = ({ children }) => {
       await axios.put('/api/members/password', passwords);
       return { success: true };
     } catch (error) {
-      console.error('Change password error:', error);
+      logger.error('Change password error', error);
       return { 
         success: false, 
         message: error.response?.data?.message || 'Failed to change password'

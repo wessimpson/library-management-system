@@ -5,6 +5,7 @@ import styled from 'styled-components';
 // Modern components
 import ModernNavbar from './components/layout/ModernNavbar';
 import AbstractBackground from './components/animations/AbstractBackground';
+import DebugMonitor from './components/DebugMonitor';
 
 // Pages
 import Home from './pages/Home';
@@ -52,6 +53,9 @@ function App() {
       <Router>
         {/* Abstract animated background */}
         <AbstractBackground />
+        
+        {/* Debug monitor for tracking requests */}
+        <DebugMonitor />
         
         {/* Modern navbar with animations */}
         <ModernNavbar />
