@@ -3,11 +3,11 @@ SET FOREIGN_KEY_CHECKS = 0;
 
 -- Administrators/Staff and Members
 INSERT INTO Members (FirstName, LastName, Email, Phone, Address, MembershipDate, MembershipStatus, MembershipType, Password) VALUES
-('Admin', 'User', 'admin@library.com', '555-111-0000', 'Library Main Office', '2023-01-01', 'Active', 'Staff', '$2a$10$JK4Nh31Z8JVCnGTrUTP3YeQm3HpB3fGJqKbc7YCk4ZRBs7p3rZD.u'),
-('John', 'Doe', 'john.doe@email.com', '555-111-2222', '123 Main St, Anytown', '2023-01-15', 'Active', 'Regular', '$2a$10$JK4Nh31Z8JVCnGTrUTP3YeQm3HpB3fGJqKbc7YCk4ZRBs7p3rZD.u'),
-('Jane', 'Smith', 'jane.smith@email.com', '555-222-3333', '456 Oak Ave, Sometown', '2023-02-01', 'Active', 'Premium', '$2a$10$JK4Nh31Z8JVCnGTrUTP3YeQm3HpB3fGJqKbc7YCk4ZRBs7p3rZD.u'),
-('Michael', 'Johnson', 'michael.j@email.com', '555-333-4444', '789 Pine St, Othertown', '2023-01-20', 'Active', 'Regular', '$2a$10$JK4Nh31Z8JVCnGTrUTP3YeQm3HpB3fGJqKbc7YCk4ZRBs7p3rZD.u'),
-('Emily', 'Williams', 'emily.w@email.com', '555-444-5555', '321 Elm St, Sometown', '2023-02-15', 'Active', 'Student', '$2a$10$JK4Nh31Z8JVCnGTrUTP3YeQm3HpB3fGJqKbc7YCk4ZRBs7p3rZD.u');
+('Admin', 'User', 'admin@library.com', '555-111-0000', 'Library Main Office', '2023-01-01', 'Active', 'Staff', '$2a$10$.CRM87LOmi6nd1WB10K1uuMkGTiVlNWblFhSCL3oLqnKfMCzJDXjO'),
+('John', 'Doe', 'john.doe@email.com', '555-111-2222', '123 Main St, Anytown', '2023-01-15', 'Active', 'Regular', '$2a$10$.CRM87LOmi6nd1WB10K1uuMkGTiVlNWblFhSCL3oLqnKfMCzJDXjO'),
+('Jane', 'Smith', 'jane.smith@email.com', '555-222-3333', '456 Oak Ave, Sometown', '2023-02-01', 'Active', 'Premium', '$2a$10$.CRM87LOmi6nd1WB10K1uuMkGTiVlNWblFhSCL3oLqnKfMCzJDXjO'),
+('Michael', 'Johnson', 'michael.j@email.com', '555-333-4444', '789 Pine St, Othertown', '2023-01-20', 'Active', 'Regular', '$2a$10$.CRM87LOmi6nd1WB10K1uuMkGTiVlNWblFhSCL3oLqnKfMCzJDXjO'),
+('Emily', 'Williams', 'emily.w@email.com', '555-444-5555', '321 Elm St, Sometown', '2023-02-15', 'Active', 'Student', '$2a$10$.CRM87LOmi6nd1WB10K1uuMkGTiVlNWblFhSCL3oLqnKfMCzJDXjO');
 
 -- Library Branches
 INSERT INTO LibraryBranches (Name, Address, Phone, Email, ManagerID) VALUES 

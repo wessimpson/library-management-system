@@ -1,12 +1,18 @@
 const { pool } = require('../config/db');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-require('dotenv').config();
+const path = require('path');
+require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
 
 // Helper function to generate JWT
 const generateToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_EXPIRE
+  const jwtSecret = process.env.JWT_SECRET || '5a30ba756b98dceeedf685d463d43d83';
+  const jwtExpire = process.env.JWT_EXPIRE || '30d';
+  
+  console.log('JWT Secret available:', !!process.env.JWT_SECRET);
+  
+  return jwt.sign({ id }, jwtSecret, {
+    expiresIn: jwtExpire
   });
 };
 

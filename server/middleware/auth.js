@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const { pool } = require('../config/db');
-require('dotenv').config();
+const path = require('path');
+require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
 
 // Middleware to protect routes
 exports.protect = async (req, res, next) => {
@@ -21,7 +22,8 @@ exports.protect = async (req, res, next) => {
 
   try {
     // Verify token
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const jwtSecret = process.env.JWT_SECRET || '5a30ba756b98dceeedf685d463d43d83';
+    const decoded = jwt.verify(token, jwtSecret);
 
     // Get member from database
     const [member] = await pool.query(

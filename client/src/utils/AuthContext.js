@@ -2,6 +2,13 @@ import React, { createContext, useState, useEffect } from 'react';
 import axios from 'axios';
 import logger from './logger';
 
+// Set up axios with the correct base URL and proxy configuration
+if (process.env.NODE_ENV === 'development') {
+  // In development, use absolute URL to reach the local server
+  axios.defaults.baseURL = 'http://localhost:5000';
+} 
+// In production, the API calls will be relative (proxied through the same domain)
+
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
@@ -44,6 +51,7 @@ export const AuthProvider = ({ children }) => {
   // Login
   const login = async (email, password) => {
     try {
+      // Use the correct API endpoint with baseURL already set
       const res = await axios.post('/api/auth/login', { email, password });
       const { token: newToken, data } = res.data;
       
@@ -68,6 +76,7 @@ export const AuthProvider = ({ children }) => {
   // Register
   const register = async (userData) => {
     try {
+      // Use the correct API endpoint with baseURL already set
       const res = await axios.post('/api/auth/register', userData);
       const { token: newToken, data } = res.data;
       

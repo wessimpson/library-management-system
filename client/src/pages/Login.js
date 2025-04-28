@@ -54,6 +54,12 @@ const Login = () => {
         Member Login
       </h2>
       
+      <Alert variant="info">
+        <p><strong>Demo Credentials:</strong></p>
+        <p>Admin: admin@library.com / password123</p>
+        <p>User: john.doe@email.com / password123</p>
+      </Alert>
+      
       {error && <Alert variant="danger">{error}</Alert>}
       
       <Form onSubmit={handleSubmit}>
